@@ -1,0 +1,41 @@
+#!/usr/bin/python
+import os
+from optparse import OptionParser
+
+#removes spaces and uppercase letters from filenames
+
+parser = OptionParser()
+parser.add_option("-r", "--recursive", dest="recurse", action="store_true", help="rename files recursively", default=False)
+
+(options, args) = parser.parse_args()
+
+#non-recursive file renaming
+def simple_rename(dirname):
+    for filename in os.listdir(dirname):
+        rename_file(filename, dirname)
+
+#recursive renaming
+def recursive_rename(dirname):
+    for root, dirs, files in os.walk(dirname):
+        for filename in files:
+            rename_file(filename, root)
+        for dirname in dirs:
+            recursive_rename(os.path.join(root,dirname))
+            
+#rename a single file    
+def rename_file(filename, dirname):
+    new_filename = filename.lower()
+    new_filename = new_filename.replace('&','and').replace(',','').replace(' ','_')
+
+    old_filepath = os.path.join(dirname, filename)
+    new_filepath = os.path.join(dirname, new_filename)
+    
+    print "RENAMING ", old_filepath, " --> ", new_filepath
+    os.rename(old_filepath, new_filepath)
+
+#run the script
+for dirname in args:
+    if options.recurse:
+        recursive_rename(dirname)
+    else:
+        simple_rename(dirname)
