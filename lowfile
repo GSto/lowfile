@@ -25,7 +25,7 @@ def recursive_rename(dirname):
 #rename a single file    
 def rename_file(filename, dirname):
     new_filename = filename.lower()
-    new_filename = new_filename.replace('&','and').replace(',','').replace(' ','_')
+    new_filename = new_filename.replace('&','and').replace(',','').replace(' ','_').replace("'","").replace("(","").replace(")","")
 
     old_filepath = os.path.join(dirname, filename)
     new_filepath = os.path.join(dirname, new_filename)
